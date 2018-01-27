@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddWifiActivity"></activity>
+        <activity android:name=".AddWifiActivity" />
+        <activity android:name=".loginactivity" />
+        <activity android:name=".regactivity"></activity>
     </application>
 
 </manifest>

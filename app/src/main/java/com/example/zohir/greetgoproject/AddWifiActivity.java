@@ -6,24 +6,35 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class AddWifiActivity extends AppCompatActivity {
     private Button mBtn;
+    private ListView mlistItems;
 
     private Element[] nots;
     private WifiManager wifiManager;
     private List<ScanResult> wifiList;
 
+    private DatabaseReference database;
+    private int user = 1;
+
+    public String Myapi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +42,12 @@ public class AddWifiActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_wifi);
 
         mBtn = (Button) findViewById(R.id.wifiBtn);
+        mlistItems = (ListView) findViewById(R.id.listItems);
+
+        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        Myapi = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+
+        database = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +55,21 @@ public class AddWifiActivity extends AppCompatActivity {
                 detectWifi();
             }
         });
+
+        mlistItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),Myapi ,Toast.LENGTH_SHORT).show();
+                addme(position);
+            }
+        });
+    }
+
+    public void addme(int num) {
+
+
+        database.child(Myapi).setValue(nots[num].getSecurity());
+
     }
 
     public void detectWifi() {
@@ -69,7 +101,8 @@ public class AddWifiActivity extends AppCompatActivity {
         AddWifiActivity.AdapterElements adapterElements = new AddWifiActivity.AdapterElements(this);
         ListView netList = (ListView) findViewById(R.id.listItems);
         netList.setAdapter(adapterElements);
-    }
+
+   }
 
     class AdapterElements extends ArrayAdapter<Object> {
         Activity context;
