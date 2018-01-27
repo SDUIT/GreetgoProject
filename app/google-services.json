@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "149679828954",
+    "firebase_url": "https://greetgoproject.firebaseio.com",
+    "project_id": "greetgoproject",
+    "storage_bucket": "greetgoproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149679828954:android:8c210e98ab9c17ce",
+        "android_client_info": {
+          "package_name": "com.example.zohir.greetgoproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "149679828954-9stlv0qul0aksibviaikjqre0qf0fofe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zohir",
+            "certificate_hash": "043fbfeb9d3904cd1c78c3f2d93d71b1b55d4795"
+          }
+        },
+        {
+          "client_id": "149679828954-bu99u8icr6mt3pdcfo0balaqevr9csqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmgScVB557_broV1Jz5vjlrK-tGiRKYhY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149679828954-bu99u8icr6mt3pdcfo0balaqevr9csqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
