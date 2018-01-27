@@ -3,6 +3,7 @@ package com.example.zohir.greetgoproject;
 import android.app.Activity;
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -32,7 +36,8 @@ public class AddWifiActivity extends AppCompatActivity {
     private List<ScanResult> wifiList;
 
     private DatabaseReference database;
-    private int user = 1;
+    DatabaseReference mRef;
+    private int num;
 
     public String Myapi;
 
@@ -44,9 +49,13 @@ public class AddWifiActivity extends AppCompatActivity {
         mBtn = (Button) findViewById(R.id.wifiBtn);
         mlistItems = (ListView) findViewById(R.id.listItems);
 
-        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        Myapi = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        mRef = FirebaseDatabase.getInstance().getReference();
+        mRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
+//        WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        WifiInfo info = manager.getConnectionInfo();
+//        Myapi = info.getMacAddress();
+//
         database = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,16 +68,34 @@ public class AddWifiActivity extends AppCompatActivity {
         mlistItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),Myapi ,Toast.LENGTH_SHORT).show();
-                addme(position);
+
+//                Toast.makeText(getApplicationContext(),Myapi ,Toast.LENGTH_SHORT).show();
+                num = position;
+                addme();
             }
         });
     }
 
-    public void addme(int num) {
+    public void addme() {
 
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        database.child(Myapi).setValue(nots[num].getSecurity());
+                for(  DataSnapshot dsp : dataSnapshot.getChildren() ) {
+                    if( dsp.child("Myapi").equals( nots[num].getSecurity() )     ) {
+                          mRef.child(dsp.getKey()).setValue("name");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//        database.child("me").setValue(nots[num].getSecurity());
 
     }
 

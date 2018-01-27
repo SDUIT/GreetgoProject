@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,5 +63,38 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(AddwifiActivity);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.this.finish();
+        if(loginactivity.LoginActivity != null){
+            loginactivity.LoginActivity.finish();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_logout) {
+            logout();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        mAuth.signOut();
     }
 }

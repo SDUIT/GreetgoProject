@@ -1,7 +1,10 @@
 package com.example.zohir.greetgoproject;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,7 +74,11 @@ public class regactivity extends AppCompatActivity {
 
                         DatabaseReference current_user = mDatabase.child("Users").child(user_id);
 
-                        current_user.child("name").setValue("me");
+                        WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                        WifiInfo info = manager.getConnectionInfo();
+                        String Myapi = info.getMacAddress();
+
+                        current_user.child("Myapi").setValue(Myapi);
 
                         mProgress.cancel();
                         mPasswordField.setText("");
