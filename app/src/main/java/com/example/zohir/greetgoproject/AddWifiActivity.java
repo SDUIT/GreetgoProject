@@ -1,10 +1,15 @@
 package com.example.zohir.greetgoproject;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.Formatter;
@@ -39,8 +44,6 @@ public class AddWifiActivity extends AppCompatActivity {
     DatabaseReference mRef;
     private int num;
 
-    public String Myapi;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +55,6 @@ public class AddWifiActivity extends AppCompatActivity {
         mRef = FirebaseDatabase.getInstance().getReference();
         mRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-//        WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        WifiInfo info = manager.getConnectionInfo();
-//        Myapi = info.getMacAddress();
-//
         database = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +68,6 @@ public class AddWifiActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                Toast.makeText(getApplicationContext(),Myapi ,Toast.LENGTH_SHORT).show();
                 num = position;
                 addme();
             }
@@ -95,20 +93,20 @@ public class AddWifiActivity extends AppCompatActivity {
             }
         });
 
-//        database.child("me").setValue(nots[num].getSecurity());
-
     }
 
     public void detectWifi() {
+
         this.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        ActivityCompat.requestPermissions(AddWifiActivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         this.wifiManager.startScan();
+
         this.wifiList = this.wifiManager.getScanResults();
 
         Log.d("TAG", wifiList.toString());
 
         this.nots = new Element[wifiList.size()];
         for( int i=0; i<wifiList.size(); i++ ) {
-
 
             String item = wifiList.get(i).toString();
             ///
@@ -130,6 +128,18 @@ public class AddWifiActivity extends AppCompatActivity {
         netList.setAdapter(adapterElements);
 
    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    grantResults[0] = PackageManager.PERMISSION_GRANTED;
+                }
+                return;
+            }
+        }
+    }
 
     class AdapterElements extends ArrayAdapter<Object> {
         Activity context;

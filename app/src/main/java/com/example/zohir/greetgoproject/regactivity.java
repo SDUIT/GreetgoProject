@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -75,6 +76,8 @@ public class regactivity extends AppCompatActivity {
                         DatabaseReference current_user = mDatabase.child("Users").child(user_id);
 
                         WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                        ActivityCompat.requestPermissions(regactivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
                         WifiInfo info = manager.getConnectionInfo();
                         String Myapi = info.getMacAddress();
 
