@@ -3,6 +3,7 @@ package com.example.zohir.greetgoproject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
@@ -21,6 +22,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 public class regactivity extends AppCompatActivity {
 
@@ -75,11 +80,7 @@ public class regactivity extends AppCompatActivity {
 
                         DatabaseReference current_user = mDatabase.child("Users").child(user_id);
 
-                        WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                        ActivityCompat.requestPermissions(regactivity.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-
-                        WifiInfo info = manager.getConnectionInfo();
-                        String Myapi = info.getMacAddress();
+                        String Myapi = getMacAddr();
 
                         current_user.child("Myapi").setValue(Myapi);
 
@@ -105,5 +106,29 @@ public class regactivity extends AppCompatActivity {
         }
 
     }
+    public static String getMacAddr() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
 
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(Integer.toHexString(b & 0xFF) + ":");
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+        }
+        return "02:00:00:00:00:00";
+    }
 }

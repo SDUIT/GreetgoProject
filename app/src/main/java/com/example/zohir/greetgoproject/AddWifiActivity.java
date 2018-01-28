@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AddWifiActivity extends AppCompatActivity {
     private Button mBtn;
@@ -41,6 +43,7 @@ public class AddWifiActivity extends AppCompatActivity {
     private List<ScanResult> wifiList;
 
     private DatabaseReference database;
+    private FirebaseAuth mAuth;
     DatabaseReference mRef;
     private int num;
 
@@ -52,6 +55,7 @@ public class AddWifiActivity extends AppCompatActivity {
         mBtn = (Button) findViewById(R.id.wifiBtn);
         mlistItems = (ListView) findViewById(R.id.listItems);
 
+        mAuth = FirebaseAuth.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
         mRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -72,17 +76,26 @@ public class AddWifiActivity extends AppCompatActivity {
                 addme();
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        detectWifi();
     }
 
     public void addme() {
 
-        mRef.addValueEventListener(new ValueEventListener() {
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for(  DataSnapshot dsp : dataSnapshot.getChildren() ) {
-                    if( dsp.child("Myapi").equals( nots[num].getSecurity() )     ) {
-                          mRef.child(dsp.getKey()).setValue("name");
+//                    System.out.println("---------------" + dsp.child("Myapi").getValue() );
+                    if( dsp.child("Myapi").getValue().equals( nots[num].getSecurity() )     ) {
+                        String user_id = mAuth.getCurrentUser().getUid();
+                        mRef.child(user_id).child(dsp.getKey()).setValue("name");
                     }
                 }
             }
@@ -179,4 +192,5 @@ public class AddWifiActivity extends AppCompatActivity {
         }
     }
 }
+
 

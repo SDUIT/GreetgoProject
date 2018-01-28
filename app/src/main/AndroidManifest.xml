@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,7 +25,8 @@
         </activity>
         <activity android:name=".AddWifiActivity" />
         <activity android:name=".loginactivity" />
-        <activity android:name=".regactivity"></activity>
+        <activity android:name=".regactivity" />
+        <activity android:name=".Search_activity"></activity>
     </application>
 
 </manifest>
