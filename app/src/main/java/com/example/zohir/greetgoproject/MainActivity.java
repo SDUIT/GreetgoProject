@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected static MainActivity mainActivity;
 
     private ListView myUser;
+
+    private List<String> Ip = new ArrayList<String>();
+
     private List<String> connected = new ArrayList<String>();
 
     @Override
@@ -86,7 +89,12 @@ public class MainActivity extends AppCompatActivity {
         myUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this, getString(i), Toast.LENGTH_SHORT);
+                Object o = Ip.get(i);
+                String str = (String) o;
+                Intent search = new Intent(MainActivity.this, Search_activity.class);
+                search.putExtra("Ip",str);
+                startActivity(search);
+//                Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -104,9 +112,10 @@ public class MainActivity extends AppCompatActivity {
                 DataSnapshot friend = dataSnapshot.child(mi_id);
                 for (DataSnapshot mData : friend.getChildren()) {
                     if( !mData.getKey().equals("Myapi") ) {
-                        System.out.println(mData);
-                        String row = "Name: " + dataSnapshot.child(mi_id).child(mData.getKey()).getValue().toString();
+                        String row = dataSnapshot.child(mi_id).child(mData.getKey()).getValue().toString();
                         connected.add(row);
+                        String k = dataSnapshot.child(mData.getKey()).child("Myapi").getValue().toString();
+                        Ip.add( k );
                     }
                 }
             }
