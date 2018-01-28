@@ -13,5 +13,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="215dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textSize="30sp" />
 </RelativeLayout>
